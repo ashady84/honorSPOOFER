@@ -1,5 +1,173 @@
-make it so this code will be visible
+#include "Drawing.h"
+#include <string>
 
-when the progress bar in this code 
+#include <stdio.h>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <windows.h>
+#include <time.h>
+#include <string>
+#include <iostream>
+#include <Windows.h>
+#include <TlHelp32.h>
+#include <random>
+#include <csignal>
+#include <fstream>
+#include <iostream>
+#include <sstream> //std::stringstreamm
+#include <iostream>
+#include <random>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <strsafe.h>
+#include "font_awesome.cpp"
+#include <chrono>
+#include <thread>
+#pragma comment(lib, "urlmon.lib")
 
-is done
+LPCSTR Drawing::lpWindowName = "honor client - loader";
+ImVec2 Drawing::vWindowSize = { 400, 300 };
+ImGuiWindowFlags Drawing::WindowFlags = ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize;
+bool Drawing::bDraw = true;
+
+void Drawing::Active()
+{
+	bDraw = true;
+}
+
+bool Drawing::isActive()
+{
+	return bDraw == true;
+}
+
+static const char* selectables[] { " Gorilla Tag"," Gorilla Tag Knock Off" };
+static int currentselection = 0;
+
+static int tabs = 0;
+static char Licence[50] = "";
+static bool loginproc = false;
+
+void Drawing::Draw() {
+		if (isActive())
+			ImGui::SetNextWindowSize(vWindowSize);
+			ImGui::SetNextWindowBgAlpha(1.0f);
+			ImGui::Begin(lpWindowName, &bDraw, WindowFlags);
+			{
+				if (tabs == 0)
+				{
+					ImGui::SetCursorPos({ 91,108 });
+					ImGui::Text("License Key");
+
+					ImGui::SetNextItemWidth(220);
+					ImGui::SetCursorPos({ 90,130 });
+					ImGui::InputText("##licensekey", Licence, IM_ARRAYSIZE(Licence), ImGuiInputTextFlags_Password);
+					ImGui::SetCursorPos({ 91,205 });
+
+					if (loginproc == false)
+					{
+						ImGui::CreateContext();
+						ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+						ImGui::SetCursorPos({ 90,170 });
+						if (ImGui::Button("Login", { 220, 30 }))
+						{
+							loginproc = true;
+						}
+					}
+					if (loginproc == true)
+					{
+						ImGui::SetCursorPos({ 90,170 });
+						static float progress = 0.0f;
+						static float progress_dir = 1.0f;
+
+						progress += progress_dir * 0.4f * ImGui::GetIO().DeltaTime;
+
+						ImGui::SetNextItemWidth(220);
+						ImGui::ProgressBar(progress, ImVec2(0.0f, 30.0f));
+						ImGui::SetCursorPos({ 91,205 });
+						ImGui::Text("Current Status?: Success! Wait for Intialization.");
+
+						if (progress >= 1.0f)
+						{
+							std::this_thread::sleep_for(std::chrono::seconds(1));
+							tabs = 1;
+						}
+					}
+				}
+				if (tabs == 1)
+				{
+					ImGui::SetNextItemWidth(220);
+					ImGui::SetCursorPos({ 90,100 });
+					ImGui::ListBox("##1", &currentselection, selectables, IM_ARRAYSIZE(selectables), 3);
+
+						if (currentselection == 0)
+						{
+							ImGui::SetNextWindowSize({ 200,160 });
+							ImGui::Begin("Information", NULL, WindowFlags);
+
+							ImGui::Text("Status:");
+							ImGui::TextDisabled("Undetected");
+
+							ImGui::Spacing();
+
+							ImGui::Text("Last Update:");
+							ImGui::TextDisabled("Not Done");
+
+							ImGui::Spacing();
+
+							ImGui::Separator();
+
+							ImGui::Spacing();
+
+							ImGui::Text("Don't attempt to crack please!");
+
+							ImGui::End();
+						}
+						else if (currentselection == 1)
+						{
+							ImGui::SetNextWindowSize({ 200,160 });
+							ImGui::Begin("information", NULL, WindowFlags);
+
+							ImGui::Text("Status:");
+							ImGui::TextDisabled("idek");
+
+							ImGui::Spacing();
+
+							ImGui::Text("Last Update:");
+							ImGui::TextDisabled("Not Done");
+
+							ImGui::Spacing();
+
+							ImGui::Separator();
+
+							ImGui::Spacing();
+
+							ImGui::Text("Don't attempt to crack please!");
+
+							ImGui::End();
+						}
+
+						ImGui::SetCursorPos({ 90,180 });
+						if (ImGui::Button(" Load Honor Menu ", { 220, 30 }))
+						{
+							if (currentselection == 0)
+							{
+
+							}
+							if (currentselection == 1)
+							{
+
+							}
+						}
+					}
+				}
+				ImGui::End();
+			}
+
+#ifdef _WINDLL
+			if (GetAsyncKeyState(VK_INSERT) & 1)
+				bDraw = !bDraw;
+#endif
+
